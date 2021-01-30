@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using trailers_api.Data;
 
 namespace trailers_api
@@ -30,13 +31,15 @@ namespace trailers_api
         {
             services.AddDbContext<trailersContext>(options =>
                 options.UseSqlite(
-                    Configuration.GetConnectionString("ConnectionString")));
+                    Configuration.GetConnectionString("MyConnection")));
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "trailers_api", Version = "v1" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

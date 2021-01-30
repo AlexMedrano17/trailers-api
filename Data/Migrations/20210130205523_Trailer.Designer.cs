@@ -9,7 +9,7 @@ using trailers_api.Models;
 namespace trailers_api.Data.Migrations
 {
     [DbContext(typeof(trailersContext))]
-    [Migration("20210130182708_Trailer")]
+    [Migration("20210130205523_Trailer")]
     partial class Trailer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,7 @@ namespace trailers_api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Username" }, "IX_Admin_user_username")
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Admin_user");
@@ -62,7 +62,7 @@ namespace trailers_api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Name" }, "IX_Genre_name")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Genre");
@@ -109,13 +109,13 @@ namespace trailers_api.Data.Migrations
 
                     b.HasIndex("Genre");
 
-                    b.HasIndex(new[] { "ImgUrl" }, "IX_Trailers_img_url")
+                    b.HasIndex("ImgUrl")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "Title" }, "IX_Trailers_title")
+                    b.HasIndex("Title")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "Url" }, "IX_Trailers_url")
+                    b.HasIndex("Url")
                         .IsUnique();
 
                     b.ToTable("Trailers");
