@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -30,9 +31,8 @@ namespace trailers_api.Models
         [Required]
         [Column("img_url", TypeName = "VARCHAR")]
         public string ImgUrl { get; set; }
-        [Required]
-        [Column("shedule_date", TypeName = "DATETIME")]
-        public byte[] SheduleDate { get; set; }
+        [Column("shedule_date", TypeName= "DATETIME")]
+        public DateTime SheduleDate { get; set; }
 
         [ForeignKey(nameof(Genre))]
         [InverseProperty("Trailers")]

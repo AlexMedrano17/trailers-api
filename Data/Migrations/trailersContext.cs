@@ -25,7 +25,11 @@ namespace trailers_api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           base.OnModelCreating(modelBuilder);
+            // modelBuilder.Entity<Trailer>()
+            //     .Property("SheduleDate")
+            //     .HasDefaultValue(true);
+
+            base.OnModelCreating(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

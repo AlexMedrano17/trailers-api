@@ -21,7 +21,6 @@ namespace trailers_api.Models
         [Required]
         [Column("password", TypeName = "VARCHAR")]
         public string Password { get; set; }
-        [Required]
         [Column("shedule_date", TypeName = "DATETIME")]
         public byte[] SheduleDate { get; set; }
     }

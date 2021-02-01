@@ -14,7 +14,7 @@ namespace trailers_api.Data.Migrations
                     ID = table.Column<long>(type: "INT", nullable: false),
                     username = table.Column<string>(type: "VARCHAR (50)", nullable: false),
                     password = table.Column<string>(type: "VARCHAR", nullable: false),
-                    shedule_date = table.Column<byte[]>(type: "DATETIME", nullable: false, defaultValueSql: "datetime('now', 'localtime')")
+                    shedule_date = table.Column<byte[]>(type: "DATETIME", nullable: true, defaultValueSql: "datetime('now', 'localtime')")
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,7 @@ namespace trailers_api.Data.Migrations
                     year = table.Column<string>(type: "CHAR (4)", nullable: false),
                     url = table.Column<string>(type: "VARCHAR", nullable: false),
                     img_url = table.Column<string>(type: "VARCHAR", nullable: false),
-                    shedule_date = table.Column<byte[]>(type: "DATETIME", nullable: false, defaultValueSql: "datetime('now', 'localtime')")
+                    shedule_date = table.Column<byte[]>(type: "DATETIME", nullable: true, defaultValueSql: "datetime('now', 'localtime')")
                 },
                 constraints: table =>
                 {
