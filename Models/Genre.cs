@@ -14,7 +14,7 @@ namespace trailers_api.Models
     {
         public Genre()
         {
-            Trailers = new HashSet<Trailer>();
+            TrailerGenres = new HashSet<TrailerGenre>();
         }
 
         [Key]
@@ -24,7 +24,7 @@ namespace trailers_api.Models
         [Column("name", TypeName = "VARCHAR (50)")]
         public string Name { get; set; }
 
-        [InverseProperty(nameof(Trailer.GenreNavigation))]
-        public virtual ICollection<Trailer> Trailers { get; set; }
+        [InverseProperty(nameof(TrailerGenre.Genre))]
+        public virtual ICollection<TrailerGenre> TrailerGenres { get; set; }
     }
 }

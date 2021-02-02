@@ -22,16 +22,16 @@ namespace trailers_api.Data
         public virtual DbSet<AdminUser> AdminUsers { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
         public virtual DbSet<Trailer> Trailers { get; set; }
+        public virtual DbSet<TrailerGenre> TrailerGenres { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.Entity<Trailer>()
-            //     .Property("SheduleDate")
-            //     .HasDefaultValue(true);
+            modelBuilder.Entity<Trailer>(entity =>
+            {
+                entity.Property(e => e.SheduleDate).HasDefaultValueSql("datetime('now', 'localtime')");
+            });
 
             base.OnModelCreating(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
