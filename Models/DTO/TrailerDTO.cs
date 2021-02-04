@@ -13,4 +13,10 @@ namespace trailers_api.Models.DTO
         public string ImgUrl { get; set; }
         public DateTime SheduleDate { get; set; }
     }
+
+    public class TGenreDTO : TrailerDTO
+    {
+        public long TrailerId { get; set; }
+        public long GenreId { get; set; }
+    }
 }
