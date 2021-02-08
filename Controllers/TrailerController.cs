@@ -4,6 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using trailers_api.Data;
+using trailers_api.Models;
+using trailers_api.Models.DTO;
 
 namespace trailers_api.Controllers
 {
@@ -11,39 +16,150 @@ namespace trailers_api.Controllers
     [ApiController]
     public class TrailerController : ControllerBase
     {
+        private readonly trailersContext _context;
+
+        public TrailerController(trailersContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/Trailer
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<TrailerDTO[]>> Get()
         {
-            return Ok();
+            var trailers = await _context.Trailers.ToListAsync();
+
+            var trailersDto = trailers.Select(t => new TrailerDTO
+            {
+                         Id = t.Id,
+                      Title = t.Title,
+                       Year = t.Year,
+                        Url = t.Url,
+                     ImgUrl = t.ImgUrl,
+                SheduleDate = t.SheduleDate,
+                      Genre = _context.TrailerGenres.Where(l => l.TrailerId == t.Id)
+                                                    .Select(g => g.GenreId)
+                                                    .ToList()
+            });
+
+            return Ok(trailersDto);
         }
 
         // GET: api/Trailer/:id
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TrailerDTO>> Get(long id)
         {
-            return Ok();
+            var trailer = await _context.Trailers.FindAsync(id);
+
+            if (trailer == null) return NotFound();
+
+            var trailersDto = new TrailerDTO
+            {
+                         Id = trailer.Id,
+                      Title = trailer.Title,
+                       Year = trailer.Year,
+                        Url = trailer.Url,
+                     ImgUrl = trailer.ImgUrl,
+                SheduleDate = trailer.SheduleDate,
+                      Genre = _context.TrailerGenres.Where(l => l.TrailerId == trailer.Id)
+                                                    .Select(g => g.GenreId)
+                                                    .ToList()
+            };
+
+            return Ok(trailersDto);
         }
 
         // POST: api/Trailer
         [HttpPost]
-        public IActionResult Post([FromBody] string value)
+        public async Task<ActionResult<TrailerDTO>> Post(TrailerDTO trailerDto)
         {
-            return Ok();
+            var genreList = trailerDto.Genre;
+
+            var trailer = new Trailer
+            {
+                 Title = trailerDto.Title,
+                  Year = trailerDto.Year,
+                   Url = trailerDto.Url,
+                ImgUrl = trailerDto.ImgUrl
+            };
+
+            await _context.Trailers.AddAsync(trailer);
+            await _context.SaveChangesAsync();
+
+            trailerDto.Id = trailer.Id;
+
+            foreach (var item in genreList)
+            {
+                var trailerGenre = new TrailerGenre
+                {
+                    TrailerId = trailerDto.Id,
+                      GenreId = item
+                };
+                
+                await _context.TrailerGenres.AddAsync(trailerGenre);
+            }
+
+            await _context.SaveChangesAsync();
+            
+            return CreatedAtAction(nameof(Get), new { id = trailerDto.Id }, trailerDto);
         }
 
         // PUT: api/Trailer/:id
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(long id, TrailerDTO trailerDto)
         {
-            return Ok();
+            int i = 0;
+            var trailerToUpdate = await _context.Trailers.FindAsync(id);
+            var tGenresToUpdate = await _context.TrailerGenres.Where(tg => tg.TrailerId == id).ToListAsync();
+
+            if (trailerToUpdate == null) return NotFound();
+            
+            try
+            {   
+                 trailerToUpdate.Title = trailerDto.Title;
+                  trailerToUpdate.Year = trailerDto.Year;
+                trailerToUpdate.ImgUrl = trailerDto.ImgUrl;
+                   trailerToUpdate.Url = trailerDto.Url;
+
+                tGenresToUpdate.ForEach(x => 
+                    x.GenreId = trailerDto.Genre[i++]
+                );
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                BadRequest(e.InnerException);
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Trailer/:id
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
-            return Ok();
+            var trailer = await _context.Trailers.FindAsync(id);
+            var tGenres = await _context.TrailerGenres.Where(tg => tg.TrailerId == id).ToListAsync(); 
+
+            if (trailer == null) return NotFound();
+
+            try
+            {
+                _context.Trailers.Remove(trailer);
+
+                tGenres.ForEach(trailerGenre => 
+                    _context.TrailerGenres.Remove(trailerGenre)
+                );
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.InnerException);
+            }
+            
+            return NoContent();
         }
     }
 }
