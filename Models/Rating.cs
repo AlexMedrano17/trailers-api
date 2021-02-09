@@ -8,23 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace trailers_api.Models
 {
-    [Index(nameof(Genre1), Name = "UQ__Genres__8660A0C851EA039F", IsUnique = true)]
-    public partial class Genre
+    [Index(nameof(Rating), Name = "UQ__Ratings__560C75949E84EDC4", IsUnique = true)]
+    public partial class Ratings
     {
-        public Genre()
+        public Ratings()
         {
-            MovieGenres = new HashSet<MovieGenre>();
+            Movies = new HashSet<Movie>();
         }
 
         [Key]
         [Column("ID")]
         public int Id { get; set; }
         [Required]
-        [Column("genre")]
+        [Column("rating")]
         [StringLength(50)]
-        public string Genre1 { get; set; }
+        public string Rating { get; set; }
 
-        [InverseProperty(nameof(MovieGenre.Genre))]
-        public virtual ICollection<MovieGenre> MovieGenres { get; set; }
+        [InverseProperty(nameof(Movie.RatingNavigation))]
+        public virtual ICollection<Movie> Movies { get; set; }
     }
 }

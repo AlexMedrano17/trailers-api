@@ -8,27 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace trailers_api.Models
 {
-    [Index(nameof(Url), Name = "UQ__Trailers__DD7784179FA620A8", IsUnique = true)]
-    public partial class Trailer
+    [Table("MovieGenre")]
+    public partial class MovieGenre
     {
-        public Trailer()
-        {
-            Comments = new HashSet<Comment>();
-        }
-
         [Key]
         [Column("ID")]
         public int Id { get; set; }
-        [Required]
-        [Column("url")]
-        public string Url { get; set; }
         [Column("movie_id")]
         public int MovieId { get; set; }
+        [Column("genre_id")]
+        public int GenreId { get; set; }
 
+        [ForeignKey(nameof(GenreId))]
+        [InverseProperty("MovieGenres")]
+        public virtual Genre Genre { get; set; }
         [ForeignKey(nameof(MovieId))]
-        [InverseProperty("Trailers")]
+        [InverseProperty("MovieGenres")]
         public virtual Movie Movie { get; set; }
-        [InverseProperty(nameof(Comment.Trailer))]
-        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

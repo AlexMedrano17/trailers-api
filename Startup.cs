@@ -29,9 +29,9 @@ namespace trailers_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<trailersContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("MyConnection")));
+            // services.AddDbContext<trailersContext>(options =>
+            //     options.UseSqlServer(
+            //         Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
 
