@@ -36,10 +36,7 @@ namespace trailers_api.Controllers
                        Year = t.Year,
                         Url = t.Url,
                      ImgUrl = t.ImgUrl,
-                SheduleDate = t.SheduleDate,
-                      Genre = _context.TrailerGenres.Where(l => l.TrailerId == t.Id)
-                                                    .Select(g => g.GenreId)
-                                                    .ToList()
+                  CreatedAt = t.CreatedAt,
             });
 
             return Ok(trailersDto);
@@ -60,10 +57,7 @@ namespace trailers_api.Controllers
                        Year = trailer.Year,
                         Url = trailer.Url,
                      ImgUrl = trailer.ImgUrl,
-                SheduleDate = trailer.SheduleDate,
-                      Genre = _context.TrailerGenres.Where(l => l.TrailerId == trailer.Id)
-                                                    .Select(g => g.GenreId)
-                                                    .ToList()
+                  CreatedAt = trailer.CreatedAt
             };
 
             return Ok(trailersDto);
@@ -73,8 +67,6 @@ namespace trailers_api.Controllers
         [HttpPost]
         public async Task<ActionResult<TrailerDTO>> Post(TrailerDTO trailerDto)
         {
-            var genreList = trailerDto.Genre;
-
             var trailer = new Trailer
             {
                  Title = trailerDto.Title,
@@ -87,19 +79,7 @@ namespace trailers_api.Controllers
             await _context.SaveChangesAsync();
 
             trailerDto.Id = trailer.Id;
-
-            foreach (var item in genreList)
-            {
-                var trailerGenre = new TrailerGenre
-                {
-                    TrailerId = trailerDto.Id,
-                      GenreId = item
-                };
-                
-                await _context.TrailerGenres.AddAsync(trailerGenre);
-            }
-
-            await _context.SaveChangesAsync();
+            trailerDto.CreatedAt = trailer.CreatedAt;
             
             return CreatedAtAction(nameof(Get), new { id = trailerDto.Id }, trailerDto);
         }
@@ -108,9 +88,7 @@ namespace trailers_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, TrailerDTO trailerDto)
         {
-            int i = 0;
             var trailerToUpdate = await _context.Trailers.FindAsync(id);
-            var tGenresToUpdate = await _context.TrailerGenres.Where(tg => tg.TrailerId == id).ToListAsync();
 
             if (trailerToUpdate == null) return NotFound();
             
@@ -120,10 +98,6 @@ namespace trailers_api.Controllers
                   trailerToUpdate.Year = trailerDto.Year;
                 trailerToUpdate.ImgUrl = trailerDto.ImgUrl;
                    trailerToUpdate.Url = trailerDto.Url;
-
-                tGenresToUpdate.ForEach(x => 
-                    x.GenreId = trailerDto.Genre[i++]
-                );
 
                 await _context.SaveChangesAsync();
             }
@@ -140,17 +114,12 @@ namespace trailers_api.Controllers
         public async Task<IActionResult> Delete(long id)
         {
             var trailer = await _context.Trailers.FindAsync(id);
-            var tGenres = await _context.TrailerGenres.Where(tg => tg.TrailerId == id).ToListAsync(); 
 
             if (trailer == null) return NotFound();
 
             try
             {
                 _context.Trailers.Remove(trailer);
-
-                tGenres.ForEach(trailerGenre => 
-                    _context.TrailerGenres.Remove(trailerGenre)
-                );
 
                 await _context.SaveChangesAsync();
             }

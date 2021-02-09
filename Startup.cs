@@ -33,6 +33,8 @@ namespace trailers_api
                 options.UseSqlite(
                     Configuration.GetConnectionString("MyConnection")));
 
+            services.AddCors();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -55,6 +57,13 @@ namespace trailers_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(
+                options => options
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
             app.UseAuthorization();
 

@@ -14,13 +14,7 @@ namespace trailers_api.Models
     [Index(nameof(Url), IsUnique = true)]
     public partial class Trailer
     {
-        public Trailer()
-        {
-            TrailerGenres = new HashSet<TrailerGenre>();
-        }
-
         [Key]
-        [Required]
         [Column("ID")]
         public long Id { get; set; }
         [Required]
@@ -36,10 +30,7 @@ namespace trailers_api.Models
         [Column("img_url", TypeName = "VARCHAR")]
         public string ImgUrl { get; set; }
         [Required]
-        [Column("shedule_date", TypeName = "DATETIME")]
-        public DateTime SheduleDate { get; set; }
-
-        [InverseProperty(nameof(TrailerGenre.Trailer))]
-        public virtual ICollection<TrailerGenre> TrailerGenres { get; set; }
+        [Column("created_at", TypeName = "DATETIME")]
+        public DateTime CreatedAt { get; set; }
     }
 }
