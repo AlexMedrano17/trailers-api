@@ -7,12 +7,12 @@ namespace trailers_api.Models.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<int> Genres { get; set; }
+        public List<string> Genres { get; set; }
         public string Year { get; set; }
-        public List<int> Actors { get; set; }
-        public List<int> Directors { get; set; }
-        public List<int> Ratings { get; set; }
-        public byte[] Image { get; set; }
+        public List<string> Actors { get; set; }
+        public List<string> Directors { get; set; }
+        public string Rating { get; set; }
+        public string Image { get; set; }
         public List<string> Trailers { get; set; }
         public DateTime CreatedAt { get; set; }
     }

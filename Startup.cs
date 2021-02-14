@@ -29,11 +29,13 @@ namespace trailers_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddDbContext<trailersContext>(options =>
-            //     options.UseSqlServer(
-            //         Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MoviesContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
             services.AddControllers();
+            
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -51,6 +53,13 @@ namespace trailers_api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "trailers_api v1"));
             }
+
+            app.UseCors(
+                options => options
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+            );
 
             app.UseHttpsRedirection();
 
