@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using trailers_api.Attributes;
 using trailers_api.Data;
 using trailers_api.Models;
 using trailers_api.Models.DTO;
@@ -15,6 +16,7 @@ namespace trailers_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class MovieController : ControllerBase
     {
         private readonly MoviesContext _context;
